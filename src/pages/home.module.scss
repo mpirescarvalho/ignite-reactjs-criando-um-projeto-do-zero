@@ -1,1 +1,54 @@
-// TODO
+.header {
+  height: 7rem;
+  display: flex;
+  align-items: center;
+}
+
+.headerSpacing {
+  margin: 2.5rem 0 1.5rem 0;
+}
+
+.postList {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.post {
+  h1 {
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: var(--heading);
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+
+  p {
+    font-size: 1.125rem;
+    color: var(--body);
+    margin-bottom: 1.5rem;
+  }
+
+  footer {
+    display: flex;
+    gap: 1.5rem;
+
+    svg {
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+.loadPosts {
+  margin-top: 4rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--highlight);
+  border: 0;
+  background: transparent;
+  transition: filter 0.2s;
+
+  &:hover {
+    filter: brightness(0.9);
+  }
+}
