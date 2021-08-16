@@ -1,7 +1,11 @@
+import { useState } from 'react';
 import Image from 'next/image';
 import Head from 'next/head';
 import { GetStaticProps } from 'next';
-import { FiCalendar, FiCallback, FiUser } from 'react-icons/fi';
+import { FiCalendar, FiUser } from 'react-icons/fi';
+import Prismic from '@prismicio/client';
+import { format } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR';
 
 import { getPrismicClient } from '../services/prismic';
 
@@ -28,6 +32,32 @@ interface HomeProps {
 }
 
 export default function Home(props: HomeProps) {
+  const [posts, setPosts] = useState<Post[]>(props.postsPagination.results);
+  const [nextPage, setNextPage] = useState(props.postsPagination.next_page);
+
+  async function handleLoadPosts() {
+    const response = await fetch(nextPage);
+    const prismicResponse = await response.json();
+
+    const aditionalPosts = prismicResponse.results.map(post => {
+      const formattedDate = format(
+        new Date(post.first_publication_date),
+        'dd MMM yyyy',
+        {
+          locale: ptBR,
+        }
+      );
+
+      return {
+        ...post,
+        first_publication_date: formattedDate,
+      };
+    });
+
+    setNextPage(prismicResponse.next_page);
+    setPosts([...posts, ...aditionalPosts]);
+  }
+
   return (
     <>
       <Head>
@@ -41,175 +71,35 @@ export default function Home(props: HomeProps) {
 
         <main>
           <div className={styles.postList}>
-            <div className={styles.post}>
-              <h1>Como utilizar Hooks</h1>
-              <p>Pensando em sincronização em vez de ciclos de vida.</p>
-              <footer>
-                <time>
-                  <FiCalendar width="20" height="20" />
-                  15 Mar 2021
-                </time>
-                <span>
-                  <FiUser width="20" height="20" />
-                  Marcelo Carvalho
-                </span>
-              </footer>
-            </div>
-
-            <div className={styles.post}>
-              <h1>Como utilizar Hooks</h1>
-              <p>Pensando em sincronização em vez de ciclos de vida.</p>
-              <footer>
-                <time>
-                  <FiCalendar width="20" height="20" />
-                  15 Mar 2021
-                </time>
-                <span>
-                  <FiUser width="20" height="20" />
-                  Marcelo Carvalho
-                </span>
-              </footer>
-            </div>
-
-            <div className={styles.post}>
-              <h1>Como utilizar Hooks</h1>
-              <p>Pensando em sincronização em vez de ciclos de vida.</p>
-              <footer>
-                <time>
-                  <FiCalendar width="20" height="20" />
-                  15 Mar 2021
-                </time>
-                <span>
-                  <FiUser width="20" height="20" />
-                  Marcelo Carvalho
-                </span>
-              </footer>
-            </div>
-
-            <div className={styles.post}>
-              <h1>Como utilizar Hooks</h1>
-              <p>Pensando em sincronização em vez de ciclos de vida.</p>
-              <footer>
-                <time>
-                  <FiCalendar width="20" height="20" />
-                  15 Mar 2021
-                </time>
-                <span>
-                  <FiUser width="20" height="20" />
-                  Marcelo Carvalho
-                </span>
-              </footer>
-            </div>
-
-            <div className={styles.post}>
-              <h1>Como utilizar Hooks</h1>
-              <p>Pensando em sincronização em vez de ciclos de vida.</p>
-              <footer>
-                <time>
-                  <FiCalendar width="20" height="20" />
-                  15 Mar 2021
-                </time>
-                <span>
-                  <FiUser width="20" height="20" />
-                  Marcelo Carvalho
-                </span>
-              </footer>
-            </div>
-
-            <div className={styles.post}>
-              <h1>Como utilizar Hooks</h1>
-              <p>Pensando em sincronização em vez de ciclos de vida.</p>
-              <footer>
-                <time>
-                  <FiCalendar width="20" height="20" />
-                  15 Mar 2021
-                </time>
-                <span>
-                  <FiUser width="20" height="20" />
-                  Marcelo Carvalho
-                </span>
-              </footer>
-            </div>
-
-            <div className={styles.post}>
-              <h1>Como utilizar Hooks</h1>
-              <p>Pensando em sincronização em vez de ciclos de vida.</p>
-              <footer>
-                <time>
-                  <FiCalendar width="20" height="20" />
-                  15 Mar 2021
-                </time>
-                <span>
-                  <FiUser width="20" height="20" />
-                  Marcelo Carvalho
-                </span>
-              </footer>
-            </div>
-
-            <div className={styles.post}>
-              <h1>Como utilizar Hooks</h1>
-              <p>Pensando em sincronização em vez de ciclos de vida.</p>
-              <footer>
-                <time>
-                  <FiCalendar width="20" height="20" />
-                  15 Mar 2021
-                </time>
-                <span>
-                  <FiUser width="20" height="20" />
-                  Marcelo Carvalho
-                </span>
-              </footer>
-            </div>
-
-            <div className={styles.post}>
-              <h1>Como utilizar Hooks</h1>
-              <p>Pensando em sincronização em vez de ciclos de vida.</p>
-              <footer>
-                <time>
-                  <FiCalendar width="20" height="20" />
-                  15 Mar 2021
-                </time>
-                <span>
-                  <FiUser width="20" height="20" />
-                  Marcelo Carvalho
-                </span>
-              </footer>
-            </div>
-
-            <div className={styles.post}>
-              <h1>Como utilizar Hooks</h1>
-              <p>Pensando em sincronização em vez de ciclos de vida.</p>
-              <footer>
-                <time>
-                  <FiCalendar width="20" height="20" />
-                  15 Mar 2021
-                </time>
-                <span>
-                  <FiUser width="20" height="20" />
-                  Marcelo Carvalho
-                </span>
-              </footer>
-            </div>
-
-            <div className={styles.post}>
-              <h1>Como utilizar Hooks</h1>
-              <p>Pensando em sincronização em vez de ciclos de vida.</p>
-              <footer>
-                <time>
-                  <FiCalendar width="20" height="20" />
-                  15 Mar 2021
-                </time>
-                <span>
-                  <FiUser width="20" height="20" />
-                  Marcelo Carvalho
-                </span>
-              </footer>
-            </div>
+            {posts.map(post => {
+              return (
+                <div className={styles.post}>
+                  <h1>{post.data.title}</h1>
+                  <p>{post.data.subtitle}.</p>
+                  <footer>
+                    <time>
+                      <FiCalendar width="20" height="20" />
+                      {post.first_publication_date}
+                    </time>
+                    <span>
+                      <FiUser width="20" height="20" />
+                      {post.data.author}
+                    </span>
+                  </footer>
+                </div>
+              );
+            })}
           </div>
 
-          <button className={styles.loadPosts} type="button">
-            Carregar mais posts
-          </button>
+          {nextPage && (
+            <button
+              className={styles.loadPosts}
+              type="button"
+              onClick={handleLoadPosts}
+            >
+              Carregar mais posts
+            </button>
+          )}
         </main>
       </div>
     </>
@@ -218,9 +108,35 @@ export default function Home(props: HomeProps) {
 
 export const getStaticProps: GetStaticProps = async () => {
   const prismic = getPrismicClient();
-  // const postsResponse = await prismic.query();
+  const response = await prismic.query(
+    Prismic.Predicates.at('document.type', 'posts'),
+    {
+      fetch: ['posts.title', 'posts.subtitle', 'posts.author'],
+      pageSize: 2,
+    }
+  );
+
+  const posts = response.results.map(post => {
+    const formattedDate = format(
+      new Date(post.first_publication_date),
+      'dd MMM yyyy',
+      {
+        locale: ptBR,
+      }
+    );
+
+    return {
+      ...post,
+      first_publication_date: formattedDate,
+    };
+  });
 
   return {
-    props: {},
+    props: {
+      postsPagination: {
+        next_page: response.next_page,
+        results: posts,
+      },
+    },
   };
 };
