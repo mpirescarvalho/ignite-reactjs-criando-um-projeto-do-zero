@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Head from 'next/head';
+import Link from 'next/link';
 import { GetStaticProps } from 'next';
 import { FiCalendar, FiUser } from 'react-icons/fi';
 import Prismic from '@prismicio/client';
@@ -38,24 +39,8 @@ export default function Home(props: HomeProps) {
   async function handleLoadPosts() {
     const response = await fetch(nextPage);
     const prismicResponse = await response.json();
-
-    const aditionalPosts = prismicResponse.results.map(post => {
-      const formattedDate = format(
-        new Date(post.first_publication_date),
-        'dd MMM yyyy',
-        {
-          locale: ptBR,
-        }
-      );
-
-      return {
-        ...post,
-        first_publication_date: formattedDate,
-      };
-    });
-
     setNextPage(prismicResponse.next_page);
-    setPosts([...posts, ...aditionalPosts]);
+    setPosts([...posts, ...prismicResponse.results]);
   }
 
   return (
@@ -73,20 +58,28 @@ export default function Home(props: HomeProps) {
           <div className={styles.postList}>
             {posts.map(post => {
               return (
-                <div className={styles.post}>
-                  <h1>{post.data.title}</h1>
-                  <p>{post.data.subtitle}.</p>
-                  <footer>
-                    <time>
-                      <FiCalendar width="20" height="20" />
-                      {post.first_publication_date}
-                    </time>
-                    <span>
-                      <FiUser width="20" height="20" />
-                      {post.data.author}
-                    </span>
-                  </footer>
-                </div>
+                <Link href={`/post/${post.uid}`}>
+                  <a key={post.uid} className={styles.post}>
+                    <h1>{post.data.title}</h1>
+                    <p>{post.data.subtitle}</p>
+                    <footer>
+                      <time>
+                        <FiCalendar width="20" height="20" />
+                        {format(
+                          new Date(post.first_publication_date),
+                          'dd MMM yyyy',
+                          {
+                            locale: ptBR,
+                          }
+                        )}
+                      </time>
+                      <span>
+                        <FiUser width="20" height="20" />
+                        {post.data.author}
+                      </span>
+                    </footer>
+                  </a>
+                </Link>
               );
             })}
           </div>
@@ -116,27 +109,9 @@ export const getStaticProps: GetStaticProps = async () => {
     }
   );
 
-  const posts = response.results.map(post => {
-    const formattedDate = format(
-      new Date(post.first_publication_date),
-      'dd MMM yyyy',
-      {
-        locale: ptBR,
-      }
-    );
-
-    return {
-      ...post,
-      first_publication_date: formattedDate,
-    };
-  });
-
   return {
     props: {
-      postsPagination: {
-        next_page: response.next_page,
-        results: posts,
-      },
+      postsPagination: response,
     },
   };
 };

@@ -21,6 +21,11 @@
     color: var(--heading);
     letter-spacing: -0.5px;
     margin-bottom: 8px;
+    transition: color 0.2s;
+
+    &:hover {
+      color: var(--highlight);
+    }
   }
 
   p {
