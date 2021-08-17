@@ -1,14 +1,11 @@
 import { useState } from 'react';
-import Image from 'next/image';
 import Head from 'next/head';
-import Link from 'next/link';
 import { GetStaticProps } from 'next';
-import { FiCalendar, FiUser } from 'react-icons/fi';
 import Prismic from '@prismicio/client';
-import { format } from 'date-fns';
-import ptBR from 'date-fns/locale/pt-BR';
 
 import { getPrismicClient } from '../services/prismic';
+import { PostList } from '../components/PostList';
+import Header from '../components/Header';
 
 import commonStyles from '../styles/common.module.scss';
 import styles from './home.module.scss';
@@ -50,39 +47,10 @@ export default function Home(props: HomeProps) {
       </Head>
 
       <div className={commonStyles.container}>
-        <header className={`${styles.header} ${styles.headerSpacing}`}>
-          <Image src="/images/logo.svg" width="239" height="27" alt="logo" />
-        </header>
+        <Header className={styles.headerSpacing} />
 
         <main>
-          <div className={styles.postList}>
-            {posts.map(post => {
-              return (
-                <Link href={`/post/${post.uid}`}>
-                  <a key={post.uid} className={styles.post}>
-                    <h1>{post.data.title}</h1>
-                    <p>{post.data.subtitle}</p>
-                    <footer>
-                      <time>
-                        <FiCalendar width="20" height="20" />
-                        {format(
-                          new Date(post.first_publication_date),
-                          'dd MMM yyyy',
-                          {
-                            locale: ptBR,
-                          }
-                        )}
-                      </time>
-                      <span>
-                        <FiUser width="20" height="20" />
-                        {post.data.author}
-                      </span>
-                    </footer>
-                  </a>
-                </Link>
-              );
-            })}
-          </div>
+          <PostList posts={posts} />
 
           {nextPage && (
             <button

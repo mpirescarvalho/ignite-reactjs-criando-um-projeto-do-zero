@@ -1,0 +1,37 @@
+.postList {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.post {
+  h1 {
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: var(--heading);
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+    transition: color 0.2s;
+  }
+
+  p {
+    font-size: 1.125rem;
+    color: var(--body);
+    margin-bottom: 1.5rem;
+  }
+
+  footer {
+    display: flex;
+    gap: 1.5rem;
+
+    svg {
+      margin-right: 0.5rem;
+    }
+  }
+
+  &:hover {
+    h1 {
+      color: var(--highlight);
+    }
+  }
+}
