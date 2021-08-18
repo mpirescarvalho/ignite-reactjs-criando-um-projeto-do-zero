@@ -24,8 +24,8 @@ export function PostList({ posts }: PostListProps) {
     <div className={styles.postList}>
       {posts.map(post => {
         return (
-          <Link href={`/post/${post.uid}`}>
-            <a key={post.uid} className={styles.post}>
+          <Link key={post.uid} href={`/post/${post.uid}`}>
+            <a className={styles.post}>
               <h1>{post.data.title}</h1>
               <p>{post.data.subtitle}</p>
               <footer>
