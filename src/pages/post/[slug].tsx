@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import Prismic from '@prismicio/client';
@@ -37,6 +38,26 @@ interface PostProps {
 
 export default function Post({ post }: PostProps) {
   const router = useRouter();
+
+  const estimatedReadMinutes = useMemo(() => {
+    if (post) {
+      const postTitle = post.data.title;
+
+      const postContent = post.data.content
+        .map(content => {
+          return `${content.heading} ${RichText.asText(content.body)}`;
+        })
+        .join('');
+
+      const postText = `${postTitle} ${postContent}`;
+      const wordCount = postText.split(' ').length;
+      const readMinutes = Math.ceil(wordCount / 200);
+
+      return readMinutes;
+    }
+
+    return 0;
+  }, [post]);
 
   if (router.isFallback) {
     return (
@@ -83,7 +104,7 @@ export default function Post({ post }: PostProps) {
                 {post.data.author}
               </span>
               <span>
-                <FiClock width="20" height="20" /> 4 min
+                <FiClock width="20" height="20" /> {estimatedReadMinutes} min
               </span>
             </div>
           </header>
