@@ -53,9 +53,7 @@ export default function Post({ post }: PostProps) {
         ${RichText.asHtml(content.body)}
       `;
     })
-    .join();
-
-  console.log(post.data.banner.url);
+    .join('');
 
   return (
     <>
@@ -63,46 +61,40 @@ export default function Post({ post }: PostProps) {
         <title>{post.data.title} | spacetraveling</title>
       </Head>
 
-      <div className={commonStyles.container}>
-        <Header />
+      <Header className={commonStyles.container} />
 
-        <main className={styles.content}>
-          <div className={styles.banner}>
-            <Image src={post.data.banner.url} layout="fill" objectFit="cover" />
-          </div>
+      <main className={styles.content}>
+        <div className={styles.banner}>
+          <Image src={post.data.banner.url} layout="fill" objectFit="cover" />
+        </div>
 
-          <article>
-            <header>
-              <h1>{post.data.title}</h1>
-              <div className={styles.postInfo}>
-                <time>
-                  <FiCalendar width="20" height="20" />
-                  {format(
-                    new Date(post.first_publication_date),
-                    'dd MMM yyyy',
-                    {
-                      locale: ptBR,
-                    }
-                  )}
-                </time>
-                <span>
-                  <FiUser width="20" height="20" />
-                  {post.data.author}
-                </span>
-                <span>
-                  <FiClock width="20" height="20" /> 4 min
-                </span>
-              </div>
-            </header>
+        <article className={commonStyles.container}>
+          <header>
+            <h1>{post.data.title}</h1>
+            <div className={styles.postInfo}>
+              <time>
+                <FiCalendar width="20" height="20" />
+                {format(new Date(post.first_publication_date), 'dd MMM yyyy', {
+                  locale: ptBR,
+                })}
+              </time>
+              <span>
+                <FiUser width="20" height="20" />
+                {post.data.author}
+              </span>
+              <span>
+                <FiClock width="20" height="20" /> 4 min
+              </span>
+            </div>
+          </header>
 
-            <div
-              className={styles.postContent}
-              // eslint-disable-next-line react/no-danger
-              dangerouslySetInnerHTML={{ __html: postHtml }}
-            />
-          </article>
-        </main>
-      </div>
+          <div
+            className={styles.postContent}
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={{ __html: postHtml }}
+          />
+        </article>
+      </main>
     </>
   );
 }

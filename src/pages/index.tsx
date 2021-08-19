@@ -49,7 +49,7 @@ export default function Home(props: HomeProps) {
       <div className={commonStyles.container}>
         <Header className={styles.headerSpacing} />
 
-        <main>
+        <main className={styles.main}>
           <PostList posts={posts} />
 
           {nextPage && (
