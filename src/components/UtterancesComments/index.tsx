@@ -1,10 +1,13 @@
 import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 interface UtterancesCommentsProps {
   className?: string;
 }
 
 export function UtterancesComments(props: UtterancesCommentsProps) {
+  const router = useRouter();
+
   useEffect(() => {
     const anchor = document.getElementById('inject-comments-for-uterances');
     const scriptElem = document.createElement('script');
@@ -18,7 +21,10 @@ export function UtterancesComments(props: UtterancesCommentsProps) {
     scriptElem.setAttribute('issue-term', 'pathname');
     scriptElem.setAttribute('theme', 'github-dark');
     anchor.appendChild(scriptElem);
-  }, []);
+    return () => {
+      anchor.removeChild(anchor.firstChild);
+    };
+  }, [router.asPath]);
 
   return (
     <section id="inject-comments-for-uterances" className={props.className} />
