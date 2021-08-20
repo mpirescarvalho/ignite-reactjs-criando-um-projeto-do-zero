@@ -14,6 +14,7 @@ import Header from '../../components/Header';
 
 import commonStyles from '../../styles/common.module.scss';
 import styles from './post.module.scss';
+import { UtterancesComments } from '../../components/UtterancesComments';
 
 interface Post {
   first_publication_date: string | null;
@@ -115,6 +116,8 @@ export default function Post({ post }: PostProps) {
             dangerouslySetInnerHTML={{ __html: postHtml }}
           />
         </article>
+
+        <UtterancesComments />
       </main>
     </>
   );
