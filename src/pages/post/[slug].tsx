@@ -19,6 +19,7 @@ import { UtterancesComments } from '../../components/UtterancesComments';
 
 interface Post {
   first_publication_date: string | null;
+  last_publication_date: string | null;
   data: {
     title: string;
     banner: {
@@ -122,6 +123,19 @@ export default function Post({
                 <FiClock width="20" height="20" /> {estimatedReadMinutes} min
               </span>
             </div>
+            {post.last_publication_date && (
+              <time>
+                <i>
+                  {format(
+                    new Date(post.last_publication_date),
+                    "'* editado em' dd MMM yyyy', às' HH:mm",
+                    {
+                      locale: ptBR,
+                    }
+                  )}
+                </i>
+              </time>
+            )}
           </header>
 
           <div
