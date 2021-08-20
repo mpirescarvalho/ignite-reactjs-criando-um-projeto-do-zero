@@ -34,12 +34,24 @@ interface Post {
   };
 }
 
+interface PostLink {
+  url: string;
+  title: string;
+}
+
 interface PostProps {
   post: Post;
   preview: boolean;
+  previousPost?: PostLink;
+  nextPost?: PostLink;
 }
 
-export default function Post({ post, preview }: PostProps) {
+export default function Post({
+  post,
+  preview,
+  previousPost,
+  nextPost,
+}: PostProps) {
   const router = useRouter();
 
   const estimatedReadMinutes = useMemo(() => {
@@ -119,6 +131,20 @@ export default function Post({ post, preview }: PostProps) {
           />
         </article>
 
+        {previousPost && (
+          <>
+            Previous: <Link href={previousPost.url}>{previousPost.title}</Link>
+            <br />
+          </>
+        )}
+
+        {nextPost && (
+          <>
+            Next:<Link href={nextPost.url}>{nextPost.title}</Link>
+            <br />
+          </>
+        )}
+
         {preview && (
           <Link href="/api/exit-preview">
             <a>Sair do modo Preview</a>
@@ -163,10 +189,51 @@ export const getStaticProps: GetStaticProps<PostProps> = async ({
     ref: previewData?.ref ?? null,
   });
 
+  const previousPostResponse = await prismic.query(
+    Prismic.Predicates.at('document.type', 'posts'),
+    {
+      after: response.id,
+      fetch: 'posts.title',
+      pageSize: 1,
+      orderings: '[document.first_publication_date desc]',
+      ref: previewData?.ref ?? null,
+    }
+  );
+
+  const nextPostResponse = await prismic.query(
+    Prismic.Predicates.at('document.type', 'posts'),
+    {
+      after: response.id,
+      fetch: 'posts.title',
+      pageSize: 1,
+      orderings: '[document.first_publication_date]',
+      ref: previewData?.ref ?? null,
+    }
+  );
+
+  let previousPost: PostLink | undefined;
+  let nextPost: PostLink | undefined;
+
+  if (previousPostResponse.results[0]) {
+    previousPost = {
+      url: `/post/${previousPostResponse.results[0].uid}`,
+      title: previousPostResponse.results[0].data.title,
+    };
+  }
+
+  if (nextPostResponse.results[0]) {
+    nextPost = {
+      url: `/post/${nextPostResponse.results[0].uid}`,
+      title: nextPostResponse.results[0].data.title,
+    };
+  }
+
   return {
     props: {
       post: response,
       preview,
+      previousPost: previousPost ?? null,
+      nextPost: nextPost ?? null,
     },
   };
 };
