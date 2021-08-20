@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
+import Link from 'next/link';
 import Prismic from '@prismicio/client';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { FiCalendar, FiUser, FiClock } from 'react-icons/fi';
@@ -35,9 +36,10 @@ interface Post {
 
 interface PostProps {
   post: Post;
+  preview: boolean;
 }
 
-export default function Post({ post }: PostProps) {
+export default function Post({ post, preview }: PostProps) {
   const router = useRouter();
 
   const estimatedReadMinutes = useMemo(() => {
@@ -117,6 +119,12 @@ export default function Post({ post }: PostProps) {
           />
         </article>
 
+        {preview && (
+          <Link href="/api/exit-preview">
+            <a>Sair do modo Preview</a>
+          </Link>
+        )}
+
         <UtterancesComments />
       </main>
     </>
@@ -144,14 +152,21 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-export const getStaticProps: GetStaticProps = async context => {
-  const slug = context.params.slug as string;
+export const getStaticProps: GetStaticProps<PostProps> = async ({
+  params,
+  preview = false,
+  previewData,
+}) => {
+  const slug = params.slug as string;
   const prismic = getPrismicClient();
-  const response = await prismic.getByUID('posts', slug, {});
+  const response = await prismic.getByUID('posts', slug, {
+    ref: previewData?.ref ?? null,
+  });
 
   return {
     props: {
       post: response,
+      preview,
     },
   };
 };

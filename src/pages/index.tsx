@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Head from 'next/head';
+import Link from 'next/link';
 import { GetStaticProps } from 'next';
 import Prismic from '@prismicio/client';
 
@@ -27,6 +28,7 @@ interface PostPagination {
 
 interface HomeProps {
   postsPagination: PostPagination;
+  preview: boolean;
 }
 
 export default function Home(props: HomeProps) {
@@ -61,25 +63,36 @@ export default function Home(props: HomeProps) {
               Carregar mais posts
             </button>
           )}
+
+          {props.preview && (
+            <Link href="/api/exit-preview">
+              <a>Sair do modo Preview</a>
+            </Link>
+          )}
         </main>
       </div>
     </>
   );
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getStaticProps: GetStaticProps<HomeProps> = async ({
+  preview = false,
+  previewData,
+}) => {
   const prismic = getPrismicClient();
   const response = await prismic.query(
     Prismic.Predicates.at('document.type', 'posts'),
     {
       fetch: ['posts.title', 'posts.subtitle', 'posts.author'],
       pageSize: 2,
+      ref: previewData?.ref ?? null,
     }
   );
 
   return {
     props: {
       postsPagination: response,
+      preview,
     },
   };
 };
