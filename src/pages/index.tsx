@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import Head from 'next/head';
-import Link from 'next/link';
 import { GetStaticProps } from 'next';
 import Prismic from '@prismicio/client';
 
 import { getPrismicClient } from '../services/prismic';
 import { PostList } from '../components/PostList';
 import Header from '../components/Header';
+import { ExitPreviewButton } from '../components/ExitPreviewButton';
 
 import commonStyles from '../styles/common.module.scss';
 import styles from './home.module.scss';
@@ -64,11 +64,7 @@ export default function Home(props: HomeProps) {
             </button>
           )}
 
-          {props.preview && (
-            <Link href="/api/exit-preview">
-              <a>Sair do modo Preview</a>
-            </Link>
-          )}
+          {props.preview && <ExitPreviewButton />}
         </main>
       </div>
     </>

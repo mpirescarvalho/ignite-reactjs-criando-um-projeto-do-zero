@@ -11,11 +11,13 @@ import { RichText } from 'prismic-dom';
 import { useRouter } from 'next/router';
 
 import { getPrismicClient } from '../../services/prismic';
+
 import Header from '../../components/Header';
+import { ExitPreviewButton } from '../../components/ExitPreviewButton';
+import { UtterancesComments } from '../../components/UtterancesComments';
 
 import commonStyles from '../../styles/common.module.scss';
 import styles from './post.module.scss';
-import { UtterancesComments } from '../../components/UtterancesComments';
 
 interface Post {
   first_publication_date: string | null;
@@ -124,7 +126,7 @@ export default function Post({
               </span>
             </div>
             {post.last_publication_date && (
-              <time>
+              <time className={styles.lastUpdate}>
                 <i>
                   {format(
                     new Date(post.last_publication_date),
@@ -145,27 +147,34 @@ export default function Post({
           />
         </article>
 
-        {previousPost && (
-          <>
-            Previous: <Link href={previousPost.url}>{previousPost.title}</Link>
-            <br />
-          </>
-        )}
+        <footer className={`${commonStyles.container} ${styles.footer}`}>
+          <div className={styles.postPagination}>
+            <div>
+              {previousPost && (
+                <Link href={previousPost.url}>
+                  <a>
+                    <span>{previousPost.title}</span>
+                    <strong>Post anterior</strong>
+                  </a>
+                </Link>
+              )}
+            </div>
+            <div>
+              {nextPost && (
+                <Link href={nextPost.url}>
+                  <a>
+                    <span>{nextPost.title}</span>
+                    <strong>Próximo post</strong>
+                  </a>
+                </Link>
+              )}
+            </div>
+          </div>
 
-        {nextPost && (
-          <>
-            Next:<Link href={nextPost.url}>{nextPost.title}</Link>
-            <br />
-          </>
-        )}
+          <UtterancesComments className={styles.comments} />
 
-        {preview && (
-          <Link href="/api/exit-preview">
-            <a>Sair do modo Preview</a>
-          </Link>
-        )}
-
-        <UtterancesComments />
+          {preview && <ExitPreviewButton />}
+        </footer>
       </main>
     </>
   );

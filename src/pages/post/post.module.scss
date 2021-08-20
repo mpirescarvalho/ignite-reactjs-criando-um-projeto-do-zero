@@ -26,6 +26,13 @@
           margin-right: 0.5rem;
         }
       }
+
+      .lastUpdate {
+        display: block;
+        margin-top: 1rem;
+        font-size: 0.875rem;
+        color: var(--info);
+      }
     }
   }
 }
@@ -43,6 +50,7 @@
   font-size: 1.125rem;
   color: var(--body);
   line-height: 1.4;
+  text-align: justify;
 
   h1 {
     font-size: 2.25rem;
@@ -76,4 +84,48 @@
     font-weight: bold;
     color: var(--heading);
   }
+}
+
+.footer {
+  margin-top: 5rem;
+  margin-bottom: 5rem;
+  padding-top: 3rem;
+  border-top: 1px solid var(--body);
+}
+
+.postPagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  span {
+    display: block;
+    font-size: 1.125rem;
+    color: var(--heading);
+    letter-spacing: -0.5px;
+    transition: filter 0.2s;
+  }
+
+  strong {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--highlight);
+    margin-top: 0.5rem;
+    transition: filter 0.2s;
+  }
+
+  > div {
+    &:hover {
+      span,
+      strong {
+        filter: brightness(0.9);
+      }
+    }
+  }
+}
+
+.comments {
+  margin-top: 5rem;
+  margin-bottom: 5rem;
 }
